@@ -1,0 +1,9 @@
+span {
+    display: block;
+    text-align: center;
+    overflow-wrap: break-word;
+}
+
+span.center {
+    display: inline;
+}

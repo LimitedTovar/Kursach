@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <title>My ToDo List</title>
+    <link rel="stylesheet" href="../static/css/base.css"/>
+    <link rel="stylesheet" href="../static/css/input.css"/>
+    <link rel="stylesheet" href="../static/css/flex.css"/>
+    <link rel="stylesheet" href="../static/css/span.css"/>
+    <link rel="stylesheet" href="../static/css/projectList.css"/>
+    <script type="text/javascript" src="../static/js/projectList.js"></script>
+</head>
+<body>
+<input th:value="${_csrf.token}" id="token" type="hidden"/>
+<div class="header">
+    <div class="header-content">
+        <div class="content">
+            <span>
+                <span class="center">Hello, </span>
+                <span class="center" sec:authentication="name"></span>
+            </span>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <div class="content no-padding">
+                <button type="submit">
+                    Sign Out
+                </button>
+            </div>
+        </form>
+        <form th:action="@{/home}" method="get">
+            <div class="content no-padding">
+                <button type="submit">
+                    Home
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="header-content">
+        <div class="content no-padding">
+            <input placeholder="project name" value="" id="projectName"/>
+        </div>
+        <div class="content no-padding">
+            <button  onclick="newProject()">
+                add project
+            </button>
+        </div>
+    </div>
+</div>
+<div class="body" id="body">
+    <div class="title">
+        <div class="content">
+            <span>
+                My projects
+            </span>
+        </div>
+    </div>
+    <div class="body-content" th:each="project,i: ${projects}" th:id="${projects[i.index].id}">
+        <div class="content">
+            <span th:text="${project.name}"></span>
+        </div>
+        <div class="content no-padding">
+            <button th:onclick="'deleteProject(' + ${project.id} + ')'">
+                delete project
+            </button>
+        </div>
+        <div class="content">
+            <span>
+                <span class="center" th:text="${project.countOfTasks}"></span>
+                <span class="center"> tasks</span>
+            </span>
+        </div>
+        <form th:action="@{/project/{path}(path=${project.id})}" method="get">
+            <div class="content no-padding">
+                <button type="submit">
+                    open
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="body">
+    <div class="title">
+        <div class="content">
+            <span>
+                Foreign projects
+            </span>
+        </div>
+    </div>
+    <div class="body-content" th:each="project,i: ${foreignProjects}" th:id="${foreignProjects[i.index].id}">
+        <div class="content">
+            <span th:text="${project.name}"></span>
+        </div>
+        <div class="content no-padding">
+            <button th:onclick="'deleteMember(' + ${project.id} + ')'">
+                leave project
+            </button>
+        </div>
+        <div class="content">
+            <span>
+                <span class="center" th:text="${project.countOfTasks}"></span>
+                <span class="center"> tasks</span>
+            </span>
+        </div>
+        <form th:action="@{/project/{path}(path=${project.id})}" method="get">
+            <div class="content no-padding">
+                <button type="submit">
+                    open
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+    document.getElementById('projectName').onkeypress = function(e){
+    if (!e) e = window.event;
+    var keyCode = e.code || e.key;
+    if (keyCode == 'Enter'){
+      newProject();
+      return false;
+    }
+    }
+</script>
+</html>
